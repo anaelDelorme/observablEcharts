@@ -24,22 +24,20 @@ for (var i = 0; i < epreuves.length; i++) {
   var hour = parseInt(row["Heure"].split(' ')[1].split(':')[0]);
   var day = date.split('-').reverse().join('-'); 
    if (hour >= 7 || hour <= 2) {
-    // Si le jour n'existe pas encore dans l'objet, l'ajouter avec un tableau vide pour les heures
     if (!dataByDay[day]) {
       dataByDay[day] = new Array(20).fill(0);
     }
 
-    // Incrémenter le compteur pour l'heure correspondante
-    // Soustraire 7 à l'heure pour obtenir l'indice du tableau (de 0 à 19)
     var index = hour - 7;
     if (hour <= 2) {
-      index += 17; // si l'heure est entre minuit et 2h du matin, ajouter 17 pour obtenir l'indice du tableau (de 17 à 19)
+      index += 17; 
     }
+
+
     dataByDay[day][index]++;
   }
 }
 
-// Maintenant, vous pouvez utiliser les données traitées pour créer votre graphique
 var options1 = {
   series: [],
   chart: {
@@ -82,10 +80,6 @@ var days = Object.keys(dataByDay).sort(function(a, b) {
   return dateB - dateA;
 });
 
-
-
-
-
 moment.locale('fr');
 
 var days1 = [];
@@ -109,8 +103,17 @@ for (var day in dataByDay) {
   }
 }
 
+days1.sort(function(a, b) {
+  var dateA = moment(a, 'dddd DD/MM');
+  var dateB = moment(b, 'dddd DD/MM');
+  return dateB.diff(dateA);
+});
 
-
+days2.sort(function(a, b) {
+  var dateA = moment(a, 'dddd DD/MM');
+  var dateB = moment(b, 'dddd DD/MM');
+  return dateB.diff(dateA);
+});
 for (var i = 0; i < days1.length; i++) {
   var day = days1[i];
   var key = moment(day, 'dddd DD/MM').format('DD-MM-YYYY'); // Récupérer la clé correspondante dans l'objet dataByDay1
